@@ -4,6 +4,8 @@ var cors = require('cors')
 const { Client } = require('discord.js')
 
 const app = express()
+const bot = new Client()
+bot.login(process.env.BOT_TOKEN)
 
 var whitelist = ['http://localhost:3000', 'https://maxwerpers.me']
 var corsOptions = {
@@ -17,12 +19,9 @@ var corsOptions = {
 }
 
 app.get('/presence', cors(corsOptions), async (req, res) => {
-  const bot = new Client()
-  const token = process.env.BOT_TOKEN
-  await bot.login(token)
   const activity = bot.users.cache.get('302595184271687681')
   console.log('🚀 ~ file: index.js ~ line 25 ~ app.get ~ activity', activity)
-  if (activity === undefined) return res.send({ info: 'Error' })
+  if (activity === undefined) return new Error('Error')
   const presence = activity.presence
 
   if (presence) {
@@ -31,7 +30,7 @@ app.get('/presence', cors(corsOptions), async (req, res) => {
       if (presence.activities.length > 0) return res.send(presence.activities)
       else return res.send({ info: 'NO ACTIVITY' })
     }
-  } else return res.send({ info: 'Error' })
+  } else return new Error('Error')
 })
 
 app.listen(process.env.PORT, () => {
