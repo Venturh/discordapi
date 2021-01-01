@@ -27,7 +27,8 @@ app.get('/presence', cors(corsOptions), async (req, res) => {
   if (presence) {
     if (presence.status === 'offline') return res.send({ info: 'Offline' })
     else {
-      if (presence.activities.length > 0) return res.send(presence.activities)
+      if (presence.activities.length > 0)
+        return res.send({ presence: presence.activities })
       else return res.send({ info: 'NO ACTIVITY' })
     }
   } else return new Error('Error')
