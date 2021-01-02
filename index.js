@@ -42,6 +42,7 @@ dayjs.updateLocale('en', {
 })
 
 function makePresence(data) {
+  console.log('LOG ~ data', data)
   return data.map((d) => {
     const type =
       d.name === 'Visual Studio Code'
@@ -60,11 +61,15 @@ function makePresence(data) {
     const state =
       d.type === 'LISTENING' ? `by ${d.state.replace(';', ',')}` : d.state
 
+    let time
+    if (d.timestamps) time = dayjs().to(dayjs(d.timestamps.start))
+    else time = dayjs().toNow(true)
+
     return {
       currently,
       details: d.details,
       state,
-      time: dayjs().to(dayjs(d.timestamps.start)),
+      time,
       imgUrl: assetImage,
     }
   })
