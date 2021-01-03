@@ -14,7 +14,7 @@ export function getCurrently({ type, name }: Activity) {
 export function getImage({ name, assets }: Activity) {
   const map = new Map([
     [
-      'Visual Studio Code',
+      'Vs Code',
       `https://cdn.discordapp.com/app-assets/383226320970055681/${assets.largeImage}.png`,
     ],
     ['Spotify', `https://i.scdn.co/image/${assets.largeImage.split(':')[1]}`],
