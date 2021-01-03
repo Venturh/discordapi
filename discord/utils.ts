@@ -3,11 +3,10 @@ import ago from 's-ago'
 import { DEFAULT_IMG_URL } from '../constants'
 
 export function getCurrently({ type, name }: Activity) {
-  let customType: string
-  if (type === 'LISTENING') customType = `${type} TO`
-  else if (type === 'PLAYING' && name === 'Vs Code') customType = 'CODING IN'
-  else customType = type
-  return `${customType} ${name.toUpperCase()}`
+  if (type === 'LISTENING') return `${type} TO ${name.toUpperCase()}`
+  else if (type === 'PLAYING' && name === 'Visual Studio Code')
+    return 'CODING IN VS CODE'
+  else return `${type} ${name.toUpperCase()}`
 }
 
 export function getImage({ name, assets }: Activity) {
