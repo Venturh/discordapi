@@ -1,5 +1,6 @@
 import { Activity } from 'discord.js'
 import ago from 's-ago'
+import { DEFAULT_IMG_URL } from '../constants'
 
 export function getCurrently({ type, name }: Activity) {
   let customType: string
@@ -18,7 +19,7 @@ export function getImage({ name, assets }: Activity) {
     ],
     ['Spotify', `https://i.scdn.co/image/${assets.largeImage.split(':')[1]}`],
   ])
-  return map.get(name) || ''
+  return map.get(name) || DEFAULT_IMG_URL
 }
 
 export function getTime({ timestamps }: Activity) {
@@ -31,7 +32,6 @@ export function makePresence(activity: Activity[]) {
   return activity.map((a) => {
     const state =
       a.type === 'LISTENING' ? `by ${a.state.replace(';', ',')}` : a.state
-
     return {
       currently: getCurrently(a),
       details: a.details,
