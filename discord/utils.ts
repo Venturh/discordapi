@@ -30,12 +30,11 @@ export function getTime({ timestamps }: Activity) {
 
 export function makePresence(activity: Activity[]) {
   return activity.map((a) => {
-    const state =
-      a.type === 'LISTENING' ? `by ${a.state.replace(';', ',')}` : a.state
+    // const state =
+    //   a.type === 'LISTENING' ? `by ${a.state.replace(';', ',')}` : a.state
     return {
       currently: getCurrently(a),
       details: a.details,
-      state,
       time: getTime(a),
       imgUrl: getImage(a),
     }
