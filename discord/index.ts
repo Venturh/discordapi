@@ -17,11 +17,11 @@ export default async function discordRequest(bot: Client) {
 
   if (presence) {
     if (presence.status === 'offline')
-      return { ...defaultStatus, details: 'Currently offline' }
+      return [{ ...defaultStatus, details: 'Currently offline' }]
     else {
       if (presence.activities.length > 0)
-        return { presence: makePresence(presence.activities) }
-      else return { ...defaultStatus, details: 'Currently no activity' }
+        return makePresence(presence.activities)
+      else return [{ ...defaultStatus, details: 'Currently no activity' }]
     }
-  } else return { ...defaultStatus, details: 'Error oh oh' }
+  } else return [{ ...defaultStatus, details: 'Error oh oh' }]
 }
