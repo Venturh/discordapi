@@ -9,7 +9,10 @@ export function getCurrently({ type, name }: Activity) {
   else return `${type} ${name.toUpperCase()}`
 }
 
-export function getImage({ name, assets }: Activity) {
+export function getImage({ name, assets, type }: Activity) {
+  if (!assets && type === 'PLAYING')
+    return 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/132px-Xbox_one_logo.svg.png'
+  if (!assets) return DEFAULT_IMG_URL
   const map = new Map([
     [
       'Visual Studio Code',
@@ -27,6 +30,10 @@ export function getTime({ timestamps }: Activity) {
 }
 
 export function makePresence(activity: Activity[]) {
+  console.log(
+    '🚀 ~ file: utils.ts ~ line 37 ~ makePresence ~ activity',
+    activity
+  )
   return activity.map((a) => {
     // const state =
     //   a.type === 'LISTENING' ? `by ${a.state.replace(';', ',')}` : a.state
