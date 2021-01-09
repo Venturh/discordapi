@@ -1,6 +1,14 @@
 import { Activity } from 'discord.js'
 import ago from 's-ago'
 
+let url = ''
+export function setImageUrl(hosturl: string) {
+  if (url === '') url = hosturl
+}
+export function getImageUrl() {
+  return `${url}/assets/`
+}
+
 export function getCurrently({ type, name }: Activity) {
   if (type === 'LISTENING') return `${type} TO ${name.toUpperCase()}`
   else if (type === 'PLAYING' && name === 'Visual Studio Code')
@@ -9,8 +17,8 @@ export function getCurrently({ type, name }: Activity) {
 }
 
 export function getImage({ name, assets, type }: Activity) {
-  if (!assets && type === 'PLAYING') return `${getImageUrl}xbox.png`
-  if (!assets) return `${getImageUrl}default.png`
+  if (!assets && type === 'PLAYING') return `${getImageUrl()}xbox.png`
+  if (!assets) return `${getImageUrl()}default.png`
   const map = new Map([
     [
       'Visual Studio Code',
@@ -18,7 +26,7 @@ export function getImage({ name, assets, type }: Activity) {
     ],
     ['Spotify', `https://i.scdn.co/image/${assets.largeImage.split(':')[1]}`],
   ])
-  return map.get(name) || `${getImageUrl}default.png`
+  return map.get(name) || `${getImageUrl()}default.png`
 }
 
 export function getTime({ timestamps }: Activity) {
@@ -28,13 +36,7 @@ export function getTime({ timestamps }: Activity) {
 }
 
 export function makePresence(activity: Activity[]) {
-  console.log(
-    '🚀 ~ file: utils.ts ~ line 37 ~ makePresence ~ activity',
-    activity
-  )
   return activity.map((a) => {
-    // const state =
-    //   a.type === 'LISTENING' ? `by ${a.state.replace(';', ',')}` : a.state
     return {
       currently: getCurrently(a),
       details: a.details,
@@ -42,12 +44,4 @@ export function makePresence(activity: Activity[]) {
       imgUrl: getImage(a),
     }
   })
-}
-
-let url = ''
-export function setImageUrl(hosturl: string) {
-  if (url === '') url = hosturl
-}
-export function getImageUrl() {
-  return `${url}/assets/`
 }
