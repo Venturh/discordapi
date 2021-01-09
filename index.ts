@@ -4,6 +4,7 @@ import cors from 'cors'
 
 import discordRequest from './discord'
 import { Client } from 'discord.js'
+import { setImageUrl } from './discord/utils'
 
 dotenv.config()
 const app = express()
@@ -23,7 +24,10 @@ var corsOptions = {
 
 app.use(cors(corsOptions))
 
+app.use('/assets', express.static('public'))
+
 app.get('/presence', async (req, res) => {
+  setImageUrl(req.protocol + '://' + req.get('host'))
   return res.send(await discordRequest(bot))
 })
 

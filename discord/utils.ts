@@ -1,6 +1,5 @@
 import { Activity } from 'discord.js'
 import ago from 's-ago'
-import { DEFAULT_IMG_URL } from '../constants'
 
 export function getCurrently({ type, name }: Activity) {
   if (type === 'LISTENING') return `${type} TO ${name.toUpperCase()}`
@@ -10,9 +9,8 @@ export function getCurrently({ type, name }: Activity) {
 }
 
 export function getImage({ name, assets, type }: Activity) {
-  if (!assets && type === 'PLAYING')
-    return 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/132px-Xbox_one_logo.svg.png'
-  if (!assets) return DEFAULT_IMG_URL
+  if (!assets && type === 'PLAYING') return `${getImageUrl}xbox.png`
+  if (!assets) return `${getImageUrl}default.png`
   const map = new Map([
     [
       'Visual Studio Code',
@@ -20,7 +18,7 @@ export function getImage({ name, assets, type }: Activity) {
     ],
     ['Spotify', `https://i.scdn.co/image/${assets.largeImage.split(':')[1]}`],
   ])
-  return map.get(name) || DEFAULT_IMG_URL
+  return map.get(name) || `${getImageUrl}default.png`
 }
 
 export function getTime({ timestamps }: Activity) {
@@ -44,4 +42,12 @@ export function makePresence(activity: Activity[]) {
       imgUrl: getImage(a),
     }
   })
+}
+
+let url = ''
+export function setImageUrl(hosturl: string) {
+  if (url === '') url = hosturl
+}
+export function getImageUrl() {
+  return `${url}/assets/`
 }

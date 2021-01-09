@@ -1,6 +1,5 @@
 import { Client } from 'discord.js'
-import { makePresence } from './utils'
-import { DEFAULT_IMG_URL } from '../constants'
+import { getImageUrl, makePresence } from './utils'
 
 export default async function discordRequest(bot: Client) {
   const activity = bot.users.cache.get(process.env.DISCORD_USER_ID)
@@ -11,7 +10,7 @@ export default async function discordRequest(bot: Client) {
   const defaultStatus = {
     currently: 'DISCORD STATUS',
     time: '',
-    imgUrl: DEFAULT_IMG_URL,
+    imgUrl: `${getImageUrl()}default.png`,
   }
 
   if (presence) {
