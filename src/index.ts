@@ -7,23 +7,30 @@ import { discordRequest, setImageUrl } from './discord'
 
 dotenv.config()
 const app = express()
-const bot = new Client()
 
-app.use(
-  cors({
-    origin: 'https://maxwerpers.me',
-    optionsSuccessStatus: 200,
-  })
-)
+var whitelist = ['http://localhost:3000', 'https://maxwerpers.me']
+var corsOptions = {
+  origin: function (origin: any, callback: any) {
+    console.log('origin', origin, callback)
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+}
+
+app.use(cors(corsOptions))
 
 app.use('/assets', express.static('public'))
 
 app.get('/presence', async (req, res) => {
+  const bot = new Client()
+  await bot.login(process.env.BOT_TOKEN)
   setImageUrl(req.protocol + '://' + req.get('host'))
   return res.send(await discordRequest(bot))
 })
 
-app.listen(process.env.PORT, async () => {
-  await bot.login(process.env.BOT_TOKEN)
+app.listen(process.env.PORT, () => {
   console.log(`Server started at ${process.env.PORT}!`)
 })
