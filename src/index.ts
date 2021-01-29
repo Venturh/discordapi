@@ -11,7 +11,6 @@ const app = express()
 var whitelist = ['http://localhost:3000', 'https://maxwerpers.me']
 var corsOptions = {
   origin: function (origin: any, callback: any) {
-    console.log('origin', origin, callback)
     if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true)
     } else {
@@ -28,6 +27,7 @@ app.get('/presence', async (req, res) => {
   const bot = new Client()
   await bot.login(process.env.BOT_TOKEN)
   setImageUrl(req.protocol + '://' + req.get('host'))
+
   return res.send(await discordRequest(bot))
 })
 

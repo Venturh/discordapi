@@ -2,14 +2,15 @@ import { Client, Activity } from 'discord.js'
 import ago from 's-ago'
 
 let imageUrl = ''
-const defaultStatus = {
-  currently: 'DISCORD STATUS',
-  time: '',
-  imgUrl: `${getImageUrl()}discord.png`,
-}
 
 export async function discordRequest(bot: Client) {
+  const defaultStatus = {
+    currently: 'DISCORD STATUS',
+    time: '',
+    imgUrl: `${getImageUrl()}discord.png`,
+  }
   const user = bot.users.cache.get(process.env.DISCORD_USER_ID)
+
   if (user === undefined) return [{ ...defaultStatus, details: 'Error' }]
   const presence = user.presence
 
@@ -21,7 +22,7 @@ export async function discordRequest(bot: Client) {
         return makePresence(presence.activities)
       else return [{ ...defaultStatus, details: 'Currently no activity' }]
     }
-  } else return [{ ...defaultStatus, details: 'Error' }]
+  }
 }
 
 export function makePresence(activity: Activity[]) {
