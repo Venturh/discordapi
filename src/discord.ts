@@ -26,7 +26,7 @@ export async function discordRequest(bot: Client) {
 }
 
 export function makePresence(activity: Activity[]) {
-  const bla = activity
+  const presence = activity
     .map((a) => {
       if (a.type !== 'CUSTOM_STATUS')
         return {
@@ -38,9 +38,17 @@ export function makePresence(activity: Activity[]) {
       return
     })
     .filter((e) => e !== undefined)
-  console.log('d', bla)
+  if (presence.length === 0)
+    return [
+      {
+        currently: 'DISCORD STATUS',
+        time: '',
+        imgUrl: `${getImageUrl()}discord.png`,
+        details: 'Currently no activity',
+      },
+    ]
 
-  return bla
+  return presence
 }
 
 export function setImageUrl(hosturl: string) {
