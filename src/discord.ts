@@ -26,14 +26,21 @@ export async function discordRequest(bot: Client) {
 }
 
 export function makePresence(activity: Activity[]) {
-  return activity.map((a) => {
-    return {
-      currently: getCurrently(a),
-      details: a.details,
-      time: getTime(a),
-      imgUrl: getImage(a),
-    }
-  })
+  const bla = activity
+    .map((a) => {
+      if (a.type !== 'CUSTOM_STATUS')
+        return {
+          currently: getCurrently(a),
+          details: a.details,
+          time: getTime(a),
+          imgUrl: getImage(a),
+        }
+      return
+    })
+    .filter((e) => e !== undefined)
+  console.log('d', bla)
+
+  return bla
 }
 
 export function setImageUrl(hosturl: string) {
