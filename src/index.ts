@@ -7,6 +7,8 @@ import { discordRequest, setImageUrl } from './discord'
 
 dotenv.config()
 const app = express()
+const bot = new Client()
+
 
 var whitelist = ['http://localhost:3000', 'https://maxwerpers.me', 'https://werpers.dev']
 var corsOptions = {
@@ -24,13 +26,13 @@ app.use(cors(corsOptions))
 app.use('/assets', express.static('public'))
 
 app.get('/presence', async (req, res) => {
-  const bot = new Client()
-  await bot.login(process.env.BOT_TOKEN)
+
   setImageUrl(req.protocol + '://' + req.get('host'))
 
   return res.send(await discordRequest(bot))
 })
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, async () => {
   console.log(`Server started at ${process.env.PORT}!`)
+  await bot.login(process.env.BOT_TOKEN)
 })
