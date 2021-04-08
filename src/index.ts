@@ -9,8 +9,11 @@ dotenv.config()
 const app = express()
 const bot = new Client()
 
-
-var whitelist = ['http://localhost:3000', 'https://maxwerpers.me', 'https://werpers.dev']
+var whitelist = [
+  'http://localhost:3000',
+  'https://maxwerpers.me',
+  'https://werpers.dev',
+]
 var corsOptions = {
   origin: function (origin: any, callback: any) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -21,14 +24,12 @@ var corsOptions = {
   },
 }
 
-app.use(cors(corsOptions))
+app.use(cors())
 
 app.use('/assets', express.static('public'))
 
 app.get('/presence', async (req, res) => {
-
   setImageUrl(req.protocol + '://' + req.get('host'))
-
   return res.send(await discordRequest(bot))
 })
 
