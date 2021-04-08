@@ -3,7 +3,8 @@ import express from 'express'
 import cors from 'cors'
 
 import { Client } from 'discord.js'
-import { discordRequest, setImageUrl } from './discord'
+import { presenceRequest, setImageUrl } from './presence'
+import { emoteBotRequest } from './emotebot'
 
 dotenv.config()
 const app = express()
@@ -30,10 +31,13 @@ app.use('/assets', express.static('public'))
 
 app.get('/presence', async (req, res) => {
   setImageUrl(req.protocol + '://' + req.get('host'))
-  return res.send(await discordRequest(bot))
+  return res.send(await presenceRequest(bot))
 })
 
 app.listen(process.env.PORT, async () => {
   console.log(`Server started at ${process.env.PORT}!`)
   await bot.login(process.env.BOT_TOKEN)
+  bot.on('message', async (msg) => {
+    await emoteBotRequest(msg, bot)
+  })
 })

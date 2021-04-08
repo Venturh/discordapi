@@ -3,7 +3,7 @@ import ago from 's-ago'
 
 let imageUrl = ''
 
-export async function discordRequest(bot: Client) {
+export async function presenceRequest(bot: Client) {
   const defaultStatus = {
     currently: 'DISCORD STATUS',
     time: '',
