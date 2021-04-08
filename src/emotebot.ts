@@ -75,10 +75,13 @@ function emote(msg: Message, bot: Client) {
   const emotes = result.map((result) => {
     const name = result.slice(1, -1)
     const emote = bot.emojis.cache.find((emoji) => {
+      if (msg.guild.emojis.cache.find((e) => e.name === emoji.name))
+        return undefined
       return emoji.name === name
     })
     return { name, emote: emote }
   })
+  console.log('emotes', emotes)
   if (emotes[0].emote === undefined) return
   if (emotes.length === 1 && msg.content[0] === ':') {
     const emote = bot.emojis.cache.get(emotes[0].emote.id)
