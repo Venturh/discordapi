@@ -5,7 +5,7 @@ let imageUrl = ''
 export async function presenceRequest(bot: Client) {
   const defaultStatus = {
     currently: 'Status',
-    details: 'Currently offline',
+    details: 'Offline',
     imgUrl: `${getImageUrl()}discord.png`,
   }
   const user = bot.users.cache.get(process.env.DISCORD_USER_ID)
@@ -18,7 +18,7 @@ export async function presenceRequest(bot: Client) {
     else {
       if (presence.activities.length > 0)
         return makePresence(presence.activities)
-      else return [{ ...defaultStatus, details: 'Currently no activity' }]
+      else return [{ ...defaultStatus, details: 'Online' }]
     }
   }
 }
@@ -62,7 +62,7 @@ export function getCurrently({ type, name }: Activity) {
     case 'PLAYING':
       if (name === 'Visual Studio Code') return 'Coding in VS Code'
     default:
-      return `${capitalized.type} ${capitalized.type}`
+      return `${capitalized.type} ${capitalized.name}`
   }
 }
 
