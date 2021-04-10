@@ -1,22 +1,20 @@
 import { Client, Activity } from 'discord.js'
-import ago from 's-ago'
 
 let imageUrl = ''
 
 export async function presenceRequest(bot: Client) {
   const defaultStatus = {
-    currently: 'DISCORD STATUS',
-    time: '',
+    currently: 'Status',
+    details: 'Currently offline',
     imgUrl: `${getImageUrl()}discord.png`,
   }
   const user = bot.users.cache.get(process.env.DISCORD_USER_ID)
 
-  if (user === undefined) return [{ ...defaultStatus, details: 'Error' }]
+  if (user === undefined) return defaultStatus
   const presence = user.presence
 
   if (presence.activities) {
-    if (presence.status === 'offline')
-      return [{ ...defaultStatus, details: 'Currently offline' }]
+    if (presence.status === 'offline') return defaultStatus
     else {
       if (presence.activities.length > 0)
         return makePresence(presence.activities)
@@ -32,7 +30,6 @@ export function makePresence(activity: Activity[]) {
         return {
           currently: getCurrently(a),
           details: a.details,
-          time: getTime(a),
           imgUrl: getImage(a),
         }
       return
@@ -42,7 +39,6 @@ export function makePresence(activity: Activity[]) {
     return [
       {
         currently: 'DISCORD STATUS',
-        time: '',
         imgUrl: `${getImageUrl()}discord.png`,
         details: 'Currently no activity',
       },
@@ -59,13 +55,14 @@ export function getImageUrl() {
 }
 
 export function getCurrently({ type, name }: Activity) {
+  const capitalized = { name: capitalize(name), type: capitalize(type) }
   switch (type) {
     case 'LISTENING':
-      return `${type} TO ${name.toUpperCase()}`
+      return `${capitalized.type} to ${capitalized.type}`
     case 'PLAYING':
-      if (name === 'Visual Studio Code') return 'CODING IN VS CODE'
+      if (name === 'Visual Studio Code') return 'Coding in VS Code'
     default:
-      return `${type} ${name.toUpperCase()}`
+      return `${capitalized.type} ${capitalized.type}`
   }
 }
 
@@ -74,7 +71,6 @@ export function getImage({ name, assets, type, applicationID }: Activity) {
     switch (name) {
       case 'Figma':
         return `${getImageUrl()}figma.png`
-        break
 
       default:
         if (applicationID === '438122941302046720')
@@ -95,8 +91,6 @@ export function getImage({ name, assets, type, applicationID }: Activity) {
   return map.get(name) || `${getImageUrl()}discord.png`
 }
 
-export function getTime({ timestamps }: Activity) {
-  if (timestamps) {
-    return `started ${ago(timestamps.start)}`
-  } else return ago(new Date())
+const capitalize = (s: string) => {
+  return s.charAt(0).toUpperCase() + s.slice(1)
 }

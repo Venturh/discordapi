@@ -1,5 +1,5 @@
 {
-  "name": "pepegabot",
+  "name": "discordapi",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -9,24 +9,24 @@
     "start": "node dist/index.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "async-redis": "^1.1.7",
     "cors": "^2.8.5",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "nodemon": "^2.0.6",
-    "prettier": "^2.2.1",
-    "s-ago": "^2.2.0",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.1.3"
+    "s-ago": "^2.2.0"
   },
   "devDependencies": {
     "@types/async-redis": "^1.1.1",
     "@types/cors": "^2.8.9",
     "@types/express": "^4.17.9",
-    "@types/node": "^14.14.19"
+    "@types/node": "^14.14.19",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3",
+    "nodemon": "^2.0.6"
   },
   "prettier": {
     "tabWidth": 2,
