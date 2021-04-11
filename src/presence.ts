@@ -10,11 +10,11 @@ export async function presenceRequest(bot: Client) {
   }
   const user = bot.users.cache.get(process.env.DISCORD_USER_ID)
 
-  if (user === undefined) return defaultStatus
+  if (user === undefined) return [defaultStatus]
   const presence = user.presence
 
   if (presence.activities) {
-    if (presence.status === 'offline') return defaultStatus
+    if (presence.status === 'offline') return [defaultStatus]
     else {
       if (presence.activities.length > 0)
         return makePresence(presence.activities)
