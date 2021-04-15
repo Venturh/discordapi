@@ -24,6 +24,16 @@ async function handlePrefixMsg(msg: Message, bot: Client) {
         }
       }
       break
+    case 'remove':
+      if (content[1]) {
+        try {
+          await removeImage(content[1])
+          msg.reply('Wurde gelöscht :pepeHands:')
+        } catch (error) {
+          msg.reply('Bidde? Die Id gibts es nicht.')
+        }
+      }
+      break
     case 'e':
       try {
         const img = await searchImage(content[1])
@@ -54,6 +64,10 @@ async function handlePrefixMsg(msg: Message, bot: Client) {
 const addImage = async (id: string, url: string) => {
   if ((await db.get(id)) !== null) throw new Error()
   return await db.set(id, url)
+}
+const removeImage = async (id: string) => {
+  if ((await db.get(id)) === null) throw new Error()
+  return await db.del(id)
 }
 
 const searchImage = async (id: string) => {
