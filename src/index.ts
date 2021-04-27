@@ -10,7 +10,11 @@ dotenv.config()
 const app = express()
 const bot = new Client()
 
-var whitelist = ['http://localhost:3000', 'https://werpers.dev']
+var whitelist = [
+  'http://localhost:3000',
+  'http://portfolio.localhost',
+  'https://werpers.dev',
+]
 var corsOptions = {
   origin: function (origin: any, callback: any) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
