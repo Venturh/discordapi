@@ -2,15 +2,23 @@ import { Client, Activity } from 'discord.js'
 
 let imageUrl = ''
 
-export async function presenceRequest(bot: Client) {
-  const defaultStatus = {
-    currently: 'Status',
-    details: 'Offline',
-    imgUrl: `${getImageUrl()}discord.png`,
+type Presence = {
+    name: string,
+    state: string,
+    details?: string,
+    imgUrl?: string
+}
+
+const defaultStatus: Presence = {
+    name: 'Offline',
+    state: ''
   }
+
+export async function presenceRequest(bot: Client):Promise<Presence[]> {
   const user = bot.users.cache.get(process.env.DISCORD_USER_ID)
 
   if (user === undefined) return [defaultStatus]
+
   const presence = user.presence
 
   if (presence.activities) {
@@ -18,32 +26,26 @@ export async function presenceRequest(bot: Client) {
     else {
       if (presence.activities.length > 0)
         return makePresence(presence.activities)
-      else return [{ ...defaultStatus, details: 'Online' }]
+      else return [{ ...defaultStatus, name: 'Online', state: 'No activity' }]
     }
   }
 }
 
-export function makePresence(activity: Activity[]) {
+export function makePresence(activity: Activity[]): Presence[] {
+
   const presence = activity
     .map((a) => {
+        const nameWithType = a.name === 'Visual Studio Code' || a.name === 'CODE' ? `Coding in ${a.name}` : `${a.type} ${a.name}`
       if (a.type !== 'CUSTOM_STATUS')
         return {
-          currently: getCurrently(a),
+          name: nameWithType,
+          state: a.state,
           details: a.details,
           imgUrl: getImage(a),
         }
       return
     })
     .filter((e) => e !== undefined)
-  if (presence.length === 0)
-    return [
-      {
-        currently: 'DISCORD STATUS',
-        imgUrl: `${getImageUrl()}discord.png`,
-        details: 'Currently no activity',
-      },
-    ]
-
   return presence
 }
 
@@ -54,43 +56,20 @@ export function getImageUrl() {
   return `${imageUrl}/assets/`
 }
 
-export function getCurrently({ type, name }: Activity) {
-  const capitalized = { name: capitalize(name), type: capitalize(type) }
-  switch (type) {
-    case 'LISTENING':
-      return `${capitalized.type} to ${capitalized.type}`
-    case 'PLAYING':
-      if (name === 'Visual Studio Code') return 'Coding in VS Code'
-    default:
-      return `${capitalized.type} ${capitalized.name}`
-  }
-}
+export function getImage({ name, assets, applicationID }: Activity) {
+    if (applicationID === '438122941302046720')
+    return `${getImageUrl()}xbox.png`
 
-export function getImage({ name, assets, type, applicationID }: Activity) {
-  if (!assets && type === 'PLAYING') {
-    switch (name) {
-      case 'Figma':
-        return `${getImageUrl()}figma.png`
 
-      default:
-        if (applicationID === '438122941302046720')
-          return `${getImageUrl()}xbox.png`
-        else return `${getImageUrl()}discord.png`
-        break
-    }
-  }
+    const imagesMap = new Map([
+        [
+          'Visual Studio Code',
+          `https://media.discordapp.net/${assets.largeImage.replace('mp:', '')}`,
+        ],
+        ['Spotify', `https://i.scdn.co/image/${assets.largeImage.split(':')[1]}`],
+        ['Figma', `${getImageUrl()}figma.png`],
+      ])
 
-  const map = new Map([
-    [
-      'Visual Studio Code',
-      `https://cdn.discordapp.com/app-assets/383226320970055681/${assets.largeImage}.png`,
-    ],
-    ['Spotify', `https://i.scdn.co/image/${assets.largeImage.split(':')[1]}`],
-    ['Figma', `${getImageUrl()}figma.png`],
-  ])
-  return map.get(name) || `${getImageUrl()}discord.png`
-}
 
-const capitalize = (s: string) => {
-  return s.charAt(0).toUpperCase() + s.slice(1)
+  return imagesMap.get(name) || undefined
 }
