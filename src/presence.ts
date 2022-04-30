@@ -11,7 +11,7 @@ type Presence = {
 
 const defaultStatus: Presence = {
     name: 'Offline',
-    state: ''
+    state: 'Outside'
   }
 
 export async function presenceRequest(bot: Client):Promise<Presence[]> {
@@ -20,6 +20,8 @@ export async function presenceRequest(bot: Client):Promise<Presence[]> {
   if (user === undefined) return [defaultStatus]
 
   const presence = user.presence
+
+  console.log(presence)
 
   if (presence.activities) {
     if (presence.status === 'offline') return [defaultStatus]
@@ -35,11 +37,11 @@ export function makePresence(activity: Activity[]): Presence[] {
 
   const presence = activity
     .map((a) => {
-        const nameWithType = a.name === 'Visual Studio Code' || a.name === 'CODE' ? `Coding in ${a.name}` : `${a.type} ${a.name}`
+        const nameType = a.name === 'Visual Studio Code' || a.name === 'Code' ? `Coding in ${a.name}` : `${a.type.toLowerCase().replace(/(^\w|\s\w)/g, m => m.toUpperCase())} ${a.name}`;
       if (a.type !== 'CUSTOM_STATUS')
         return {
-          name: nameWithType,
-          state: a.state,
+          name: nameType,
+          state: a.state ?? '-',
           details: a.details,
           imgUrl: getImage(a),
         }
@@ -64,6 +66,10 @@ export function getImage({ name, assets, applicationID }: Activity) {
     const imagesMap = new Map([
         [
           'Visual Studio Code',
+          `https://media.discordapp.net/${assets.largeImage.replace('mp:', '')}`,
+        ],
+        [
+          'Code',
           `https://media.discordapp.net/${assets.largeImage.replace('mp:', '')}`,
         ],
         ['Spotify', `https://i.scdn.co/image/${assets.largeImage.split(':')[1]}`],
